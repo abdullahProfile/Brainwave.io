@@ -1,0 +1,172 @@
+<style>
+  .image-with-text {
+    .container {
+      max-width: 1440px;
+      display: flex;
+      flex-direction: {{ section.settings.flex-direction }};
+      align-item:{{ section.settings.align-item }};
+      justify-content: {{ section.settings.flex-justify }};
+      gap: {{ section.settings.content-gap }}px;
+    }
+  }
+
+  .text__image {
+    max-width: 610px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      object-fit: {{ section.settings.object-fit }};
+    }
+  }
+
+  .text__title {
+    font-size: {{ section.settings.title-font-size }}px;
+    font-weight: {{ section.settings.title-font-weight }};
+    margin-bottom: 16px;
+  }
+
+  .text {
+    max-width: 520px;
+  }
+</style>
+<section class="image-with-text">
+  <div class="container">
+    <div class="text">
+      <h3 class="text__title">{{ section.settings.title }}</h3>
+
+      <p>{{ section.settings.description }}</p>
+    </div>
+
+    <div class="text__image">
+      <img src="{{ section.settings.text-image | image_url: width: 610 }}" alt="{{ product.title }}" />
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+ "name": "image with text",
+ "settings": [
+
+  {
+    "type": "image_picker",
+    "label": "image",
+    "id": "text-image",
+  },
+
+  {
+    "type": "select",
+    "label": "image fit",
+    "id": "object-fit",
+
+    "options": [
+      {"value": "none", "label": "none"},
+      {"value": "cover", "label": "cover"},
+      {"value": "contian", "label": "contian"},
+      {"value": "fill", "label": "fill"},
+      {"value": "scale-down", "label": "scale down"}
+    ]
+  },
+
+  {
+    "type": "text",
+    "label": "title",
+    "id": "title",
+    "default":"hello i am image with text heading"
+  },
+
+  {
+    "type": "range",
+    "label": "title font size",
+    "id": "title-font-size",
+    "min": 16,
+    "max": 40,
+    "step": 4,
+    "default": 16,
+    "unit": "px"
+  },
+
+  {
+    "type": "select",
+    "label": "title font weight",
+    "id": "title-font-weight",
+
+    "options": [
+      {"value": "bold", "label": "bold"},
+      {"value": "regular", "label": "regular"},
+      {"value": "extra-bold", "label": "extra-bold"},
+      {"value": "medium", "label": "medium"}
+    ]
+  },
+
+  {
+    "type": "text",
+    "label": "Description",
+    "id": "description",
+    "default": "Hello i am description of this section"
+  },
+
+  {
+    "type": "select",
+    "label": "font weight",
+    "id": "text-weight",
+    "options": [
+      {"value": "600", "label": "Regular"},
+      {"value": "800", "label": "Medium"},
+      {"value": "900", "label": "large"},
+    ]
+  },
+
+  {
+    "type": "select",
+    "label": "flex Direction",
+    "id": "flex-direction",
+
+    "options": [
+      {"value": "row", "label": "row"},
+      {"value": "column", "label": "column"},
+      {"value": "row-reverse", "label": "row reverse"},
+      {"value": "column-reverse","label": "column reverse"}
+    ]
+  },
+
+  {
+    "type": "select",
+    "label": "align item",
+    "id": "align-item",
+    "options": [
+      {"value": "center", "label": "center"},
+      {"value": "flex-start", "label": "flex start"},
+      {"value": "flex-end", "label": "flex end"},
+      {"value": "stretch", "label": "stretch"},
+      {"value": "baseline", "label": "baseline"}
+    ]
+  },
+
+  {
+    "type": "range",
+    "label": "gap",
+    "id": "content-gap",
+    "min": 20,
+    "max": 80,
+    "step": 4,
+    "default": 20,
+  },
+
+  {
+    "type": "select",
+    "label": "justify content",
+    "id": "flex-justify",
+
+    "options": [
+      {"value": "space-between", "label": "space-between"},
+      {"value": "space-around", "label": "space-arround"},
+      {"value": "center", "label": "center"},
+      {"value": "space-evenly", "label": "space-evenly"},
+      {"value": "flex-start", "label": "flex-start"},
+      {"value": "flex-end", "label": "flex-end"}
+    ]
+  }
+ ]
+}
+{% endschema %}

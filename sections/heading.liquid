@@ -1,4 +1,11 @@
-<h3>{{ section.settings.heading_text }}</h3>
+<style>
+  .title {
+    text-align: {{ section.settings.text-position }};
+    font-weight: {{ section.settings.font-wight }};
+    font-size: {{ section.settings.font-size }}px;
+  }
+</style>
+<h3 class="title">{{ section.settings.heading_text }}</h3>
 {% schema %}
 {
   "name" : "heading",
@@ -8,6 +15,36 @@
     "id" : "heading_text",
     "label" : "Heading Text",
     "default" : "Welcome to Our Store"
+  },
+  {
+    "type": "select",
+    "id": "text-position",
+    "label": "Text postion",
+
+    "options": [
+      {"value": "left", "label": "left"},
+      {"value": "right", "label": "right"},
+      {"value": "center", "label": "center"}
+    ]
+  },
+  {
+    "type": "select",
+    "label": "font weight",
+    "id": "font-wight",
+    "options": [
+      {"value": "400", "label": "Regular"},
+      {"value": "600", "label": "Medium"},
+      {"value": "700", "label": "Bold"}
+    ]
+  },
+  {
+    "type": "range",
+    "label": "Font Size",
+    "id": "font-size",
+    "min": 16,
+    "max": 80,
+    "step": 4,
+    "default": 16,
   }
   ],
   "presets": [
