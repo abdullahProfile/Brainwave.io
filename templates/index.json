@@ -10,10 +10,17 @@
         "title": "Featured Products",
         "product_count": 4
       }
+    },
+    "hero": {
+      "type":"hero",
+      "settings": {
+        "title":"hero Section",
+      }
     }
   },
   "order":[
     "heading",
     "feature-collection",
+    "hero"
   ],
 }

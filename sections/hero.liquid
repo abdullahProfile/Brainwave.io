@@ -1,0 +1,99 @@
+<style>
+.hero {
+  max-width: 1920px;
+  margin-inline: auto;
+  margin-bottom : 40px;
+}
+
+.container {
+  max-width: 1440px;
+  margin-inline: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hero__text {
+  position: absolute;
+  left: 30%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 16px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 450px;
+}
+
+.hero__title {
+  font-size: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.hero__description {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+</style>
+<section class="hero">
+  <div class="container">
+
+    {% if section.settings.slid_image %}
+      <div class="hero__image">
+        <img
+          src="{{ section.settings.slid_image | image_url: width: 1920 }}"
+          alt="{{ section.settings.slid_image.alt | escape }}"
+        >
+      </div>
+    {% endif %}
+
+    <div class="hero__text">
+      <h1 class="hero__title">
+        {{ section.settings.hero_title }}
+      </h1>
+
+      <p class="hero__description">
+        {{ section.settings.hero_text }}
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+{% schema %}
+  {
+    "name": "Hero Section",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "slid_image",
+        "label": "Hero Image",
+      },
+      {
+        "type": "text",
+        "id": "hero_title",
+        "label": "Hero Title",
+        "default":"Hello I am Hero Title"
+      },
+
+      {
+        "type": "text",
+        "id": "hero_text",
+        "label": "Description",
+        "default": "Hello I am Description",
+      },
+    ],
+    "presets": [
+      {
+        "name": "Hero Section"
+      }
+    ]
+  }
+{% endschema %}
