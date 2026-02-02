@@ -1,245 +1,397 @@
 <style>
-
-  .image-with-text__container {
-      width: 100%;
-      max-width: 1440px;
-      display: flex;
-      flex-direction: {{ section.settings.flex-direction }};
-      align-items:{{ section.settings.align-item }};
-      justify-content: {{ section.settings.flex-justify }};
-      gap: {{ section.settings.content-gap }}px;
+  .section-{{ section.id }} .container {
+    display: flex;
+    flex-direction: {{ section.settings.flex-direction }};
+    align-items: {{ section.settings.align_items }};
+    justify-content: {{ section.settings.justify_content }};
+    gap: {{ section.settings.gap }}px;
   }
 
-  .text__image {
-    width:100%;
-    max-width: 38.125rem;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      object-fit: {{ section.settings.object-fit }};
+  @media (max-width: 768px) {
+    .section-{{ section.id }} .container {
+      flex-direction: {{ section.settings.flex_direction_mobile }};
     }
   }
 
-  .text__title {
-    font-size: {{ section.settings.title-font-size }}rem;
-    font-weight: {{ section.settings.title-font-weight }};
-    margin-bottom: 16px;
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'heading' %}
+        .section-{{ section.id }} .heading {
+          font-size: {{ block.settings.title_size }}px;
+        }
+
+        @media (max-width: 768px) {
+          .section-{{ section.id }} .heading {
+            font-size: {{ block.settings.title_size_mobile }}px;
+          }
+        }
+
+      {% when 'text' %}
+        .section-{{ section.id }} .description {
+          font-size: {{ block.settings.description_size }}px;
+        }
+
+        @media (max-width: 768px) {
+          .section-{{ section.id }} .description {
+            font-size: {{ block.settings.description_size_mobile }}px;
+          }
+        }
+    {% endcase %}
+  {% endfor %}
+
+  .section-{{section.id}} .image{
+    max-width: 600px;
+    overflow: hiddden;
   }
 
-  .text {
-    max-width: 32.5rem;
+  .section-{{section.id}} .image img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0px
   }
 
-  @media (max-width:48.625rem) {
-
-    .image-with-text__container {
-      max-width: 100%;
-      flex-direction: {{ section.settings.flex-direction__mbl}};
-    }
-
-    .text__image {
-      max-width: 100%;
-    }
-
-    .text {
-      max-width: 100%;
-    }
-
-  }
 </style>
-<section class="image-with-text">
-  <div class="image-with-text__container">
 
-    <div class="text">
-      <h3 class="text__title">{{ section.settings.title }}</h3>
-      <p>{{ section.settings.description }}</p>
+<section class="section section-{{ section.id }}">
+  <div class="container">
+    <div class="image">
+      {% if section.settings.image != blank %}
+        {% assign image = section.settings.image %}
+        <img
+          src="{{ image | img_url: '600x' }}"
+          alt="{{ image.alt | escape }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}"
+        >
+      {% else %}
+        <div class="placeholder">
+          {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+        </div>
+      {% endif %}
     </div>
 
-    <div class="text__image">
-      <img src="{{ section.settings.text-image | image_url: width: 610 }}" alt="{{ product.title }}" />
+    <div class="content">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'heading' %}
+            <{{ block.settings.heading_tag }} class="heading" {{ block.shopify_attributes }}>
+              {{ block.settings.heading }}
+            </{{ block.settings.heading_tag }}>
+
+          {% when 'text' %}
+            <div class="description" {{ block.shopify_attributes }}>
+              {{ block.settings.description }}
+            </div>
+
+          {% when 'button' %}
+            {% if block.settings.button_text != blank %}
+              <a
+                href="{{ block.settings.button_link }}"
+                class="link button"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.button_text }}
+              </a>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
     </div>
-
-    {% if section.blocks.size > 0 %}
-      <div class="text__blocks">
-        {% for block in section.blocks %}
-          {% case block.type %}
-            {% when 'text_block' %}
-              <div class="block block--text">
-                <p>{{ block.settings.block_text }}</p>
-              </div>
-
-            {% when 'image_block' %}
-              <div class="block block--image">
-                <img src="{{ block.settings.block_image | image_url: 'medium' }}" alt="">
-              </div>
-          {% endcase %}
-        {% endfor %}
-      </div>
-    {% endif %}
-
   </div>
 </section>
 
-
 {% schema %}
 {
- "name": "image with text",
- "settings": [
+  "name": "image with text",
+  "tag": "section",
+  "class": "section",
 
-  {
-    "type": "image_picker",
-    "label": "image",
-    "id": "text-image",
-  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "section settings"
+    },
 
-  {
-    "type": "select",
-    "label": "image fit",
-    "id": "object-fit",
+    {
+      "type": "select",
+      "id": "flex-direction",
+      "label": "Flex Direction",
 
-    "options": [
-      {"value": "none", "label": "none"},
-      {"value": "cover", "label": "cover"},
-      {"value": "contian", "label": "contian"},
-      {"value": "fill", "label": "fill"},
-      {"value": "scale-down", "label": "scale down"}
-    ]
-  },
+      "options": [
+        {
+          "value": "row",
+          "label": "Row"
+        },
 
-  {
-    "type": "text",
-    "label": "title",
-    "id": "title",
-    "default":"hello i am image with text heading"
-  },
+        {
+          "value": "column",
+          "label": "column"
+        },
 
-  {
-    "type": "range",
-    "label": "title font size",
-    "id": "title-font-size",
-    "min": 1,
-    "max": 4,
-    "step": 1,
-    "default": 1,
-    "unit": "rem"
-  },
+        {
+          "value": "row-reverse",
+          "label": "Row Reverse"
+        },
 
-  {
-    "type": "select",
-    "label": "title font weight",
-    "id": "title-font-weight",
+        {
+          "value": "column-reverse",
+          "label": "column Reverse"
+        }
+      ],
 
-    "options": [
-      {"value": "bold", "label": "bold"},
-      {"value": "regular", "label": "regular"},
-      {"value": "extra-bold", "label": "extra-bold"},
-      {"value": "medium", "label": "medium"}
-    ]
-  },
+      "default": "row"
+    },
 
-  {
-    "type": "text",
-    "label": "Description",
-    "id": "description",
-    "default": "Hello i am description of this section"
-  },
+    {
+      "type": "select",
+      "id": "align_items",
+      "label": "Align Items",
 
-  {
-    "type": "select",
-    "label": "font weight",
-    "id": "text-weight",
-    "options": [
-      {"value": "600", "label": "Regular"},
-      {"value": "800", "label": "Medium"},
-      {"value": "900", "label": "large"},
-    ]
-  },
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
 
-  {
-    "type": "select",
-    "label": "flex Direction",
-    "id": "flex-direction",
+        {
+          "value": "start",
+          "label": "Start"
+        },
 
-    "options": [
-      {"value": "row", "label": "row"},
-      {"value": "column", "label": "column"},
-      {"value": "row-reverse", "label": "row reverse"},
-      {"value": "column-reverse","label": "column reverse"}
-    ]
-  },
+        {
+          "value": "end",
+          "label": "End"
+        }
+      ],
 
-  {
-    "type": "select",
-    "label": "align item",
-    "id": "align-item",
-    "options": [
-      {"value": "center", "label": "center"},
-      {"value": "flex-start", "label": "flex start"},
-      {"value": "flex-end", "label": "flex end"},
-      {"value": "stretch", "label": "stretch"},
-      {"value": "baseline", "label": "baseline"}
-    ]
-  },
+      "default": "center"
+    },
 
-  {
-    "type": "range",
-    "label": "gap",
-    "id": "content-gap",
-    "min": 20,
-    "max": 80,
-    "step": 4,
-    "default": 20,
-  },
+    {
+      "type": "select",
+      "id": "justify_content",
+      "label": "Justify content",
 
-  {
-    "type": "select",
-    "label": "justify content",
-    "id": "flex-justify",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
 
-    "options": [
-      {"value": "space-between", "label": "space-between"},
-      {"value": "space-around", "label": "space-arround"},
-      {"value": "center", "label": "center"},
-      {"value": "space-evenly", "label": "space-evenly"},
-      {"value": "flex-start", "label": "flex-start"},
-      {"value": "flex-end", "label": "flex-end"}
-    ]
-  },
+        {
+          "value": "space-between",
+          "label": "Space Between"
+        },
 
-  {
-    "type": "select",
-    "label": "flex Direction mobile",
-    "id": "flex-direction__mbl",
+        {
+          "value": "space-evenly",
+          "label": "Space Evenly"
+        },
 
-    "options": [
-      {"value": "row", "label": "row"},
-      {"value": "column", "label": "column"},
-      {"value": "row-reverse", "label": "row reverse"},
-      {"value": "column-reverse","label": "column reverse"}
-    ]
-   },
- ],
+        {
+          "value": "space-around",
+          "label": "Space Around"
+        }
+      ],
+
+      "default": "space-between"
+    },
+
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between",
+      "min": 10,
+      "max": 80,
+      "step": 10,
+      "default": 10,
+      "unit": "px"
+    },
+
+    {
+      "type": "select",
+      "id": "flex_direction_mobile",
+      "label": "flex direction on mobile",
+
+      "options": [
+        {
+          "value": "row",
+          "label": "Row"
+        },
+
+        {
+          "value": "column",
+          "label": "column"
+        },
+
+        {
+          "value": "row-reverse",
+          "label": "Row Reverse"
+        },
+
+        {
+          "value": "column-reverse",
+          "label": "column Reverse"
+        }
+      ],
+
+      "default": "column"
+    },
+
+    {
+      "type": "header",
+      "content": "Image Setting"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ],
 
   "blocks": [
     {
-      "type": "text_block",
-      "name": "Text Block",
+      "type": "heading",
+      "name": "Heading",
+
       "settings": [
         {
           "type": "text",
-          "id": "block_text",
-          "label": "Block Text",
-          "default": "This is a block text"
+          "id": "heading",
+          "label": "heading",
+          "default": "image with text heading"
+        },
+
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading Tag",
+
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+
+            {
+              "value": "h4",
+              "label": "H4"
+            }
+          ],
+
+          "default": "h1"
+        },
+
+        {
+          "type": "range",
+          "id": "title_size",
+          "label": "Title font size",
+          "min": 16,
+          "max": 64,
+          "step": 4,
+          "default": 16,
+          "unit": "px"
+        },
+
+        {
+          "type": "range",
+          "id": "title_size_mobile",
+          "label": "Title font size on mobile",
+          "min": 16,
+          "max": 64,
+          "step": 4,
+          "default": 16,
+          "unit": "px"
         }
       ]
-    }
+    },
+
+    {
+      "type": "text",
+      "name": "text",
+      "limit": 2,
+
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Image with text description</p>"
+        },
+
+        {
+          "type": "range",
+          "id": "escription_size",
+          "label": "Description font size",
+          "min": 16,
+          "max": 64,
+          "step": 4,
+          "default": 16,
+          "unit": "px"
+        },
+
+        {
+          "type": "range",
+          "id": "description_size_mobile",
+          "label": "Description font size on mobile",
+          "min": 16,
+          "max": 64,
+          "step": 4,
+          "default": 16,
+          "unit": "px"
+        },
+      ],
+    },
+
+    {
+      "type": "button",
+      "name": "button",
+      "limit": 2,
+
+      "settings": [
+
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop now"
+        },
+
+        {
+          "type": "url",
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    },
   ],
 
   "presets": [
     {
-      "name": "Image with Text",
-      "category": "Custom"
+      "name": "Image with text",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+
+        {
+          "type": "button"
+        }
+      ]
     }
   ]
 }

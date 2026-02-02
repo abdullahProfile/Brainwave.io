@@ -1,38 +1,10 @@
 {
-  "sections":{
-
-    "heading": {
-      "type": "heading",
-      "settings":{}
-    },
-
-    "feature-collection": {
-      "type": "feature-collection",
-      "settings": {
-        "title": "Featured Products",
-        "product_count": 4
-      }
-
-    },
-
-    "hero": {
-      "type":"hero",
-      "settings": {
-        "title":"hero Section",
-      }
-    },
-
+  "sections": {
     "image-with-text": {
-      "type":"image-with-text",
-      "settings": {
-        "title": "image-with-text"
-      }
+      "type": "image-with-text"
     }
   },
-  "order":[
-    "heading",
-    "feature-collection",
-    "hero",
+  "order": [
     "image-with-text"
-  ],
+  ]
 }
