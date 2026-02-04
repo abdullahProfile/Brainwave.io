@@ -2,9 +2,14 @@
   "sections": {
     "image-with-text": {
       "type": "image-with-text"
+    },
+
+    "announcment-bar": {
+      "type": "announcment-bar"
     }
   },
   "order": [
-    "image-with-text"
+    "image-with-text",
+    "announcment-bar"
   ]
 }
