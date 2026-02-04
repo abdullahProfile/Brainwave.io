@@ -13,7 +13,6 @@
     --content-width: {{ section.settings.text_content_width }}px;
     --section-mb-mobile: {{ section.settings.section_margin_block_mobile }}px;
   }
-
   .section-{{ section.id }} .container {
     display: flex;
     flex-direction: var(--flex-direction);
@@ -104,8 +103,8 @@
         justify-content: {% if block.settings.button_alignment == 'center' %}center
         {% elsif block.settings.button_alignment == 'left' %}flex-start
         {% else %}flex-end
-        {% endif %}
-      }
+      {% endif %}
+    }
 
     {% endif %}
   {% endfor %}
@@ -160,18 +159,13 @@
 }
 </style>
 
+
 <section class="section section-{{ section.id }}">
   <div class="container">
 
     <div class="image">
       {% if section.settings.image != blank %}
-        {% assign image = section.settings.image %}
-        <img
-          src="{{ image | img_url:'800x' }}"
-          srcset="{{ image | img_url:'400x' }} 400w, {{ image | img_url:'800x' }} 800w"
-          sizes="(max-width: 768px) 100vw, 800px"
-          alt="{{ image.alt | escape }}"
-        >
+        {{ section.settings.image | image_url: width: 800 | image_tag }}
       {% else %}
         <div class="placeholder">
           {{ 'image' | placeholder_svg_tag: 'placeholder' }}
@@ -292,7 +286,6 @@
       "id": "text_align_mobile",
       "label": "Center content on mobile",
       "default": true,
-      "info": "When enabled, all text and buttons will be centered on mobile devices."
     },
 
     {

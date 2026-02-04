@@ -1,0 +1,141 @@
+<style>
+.header-{{ section.id }} {
+  --align-items: {{ section.settings.align_items }};
+  --logo-width: {{ section.settings.logo_width }}px;
+  --logo-alignment: {{ section.settings.logo_alignment }};
+  --color-primary: #161C2D;
+  --bg-color-primary: #68D585;
+  --bg-color-secondary: #473BF0;
+}
+
+.header-{{ section.id }} .container {
+  display: flex;
+  padding: {{ section.settings.padding_inline }}px {{ section.settings.padding_block }}px;
+  align-items: var(--align-items);
+  background: var(--bg-color-primary);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.header-{{ section.id }} .logo{
+  width: var(--logo-width);
+  align-self: var(--logo-alignment);
+}
+</style>
+
+<header class="header-{{ section.id }}">
+  <div class="container">
+    <div class="logo" >
+      {% if theme.settings.logo !=blank %}
+        <a href="{{ section.settings.logo_url }}" class="logo_link"><img src="{{ theme.settings.logo }}"></a>
+        {% endif %}
+    </div>
+
+    <ul>
+      <li><a href="#">{{  }}</a></li>
+    </ul>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "header",
+  "tag": "header",
+  "class": "header",
+
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header Settings"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "label": "Header Padding Inline",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 20
+    },
+
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Header Padding Block",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 20
+    },
+
+    {
+      "type": "select",
+      "id": "align_items",
+      "label": "Header Align Items",
+
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "start", "label": "Start" },
+        { "value": "end", "label": "End" },
+        {"value": "stretch", "label": "stretch"}
+      ],
+
+      "default": "center"
+    },
+
+    {
+      "type": "header",
+      "content": "Logo Setting"
+    },
+
+    {
+      "type": "url",
+      "id": "logo_url",
+      "label": "Logo Link"
+    },
+
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width",
+      "min": 178,
+      "max": 240,
+      "step": 2,
+      "unit": "px",
+      "default": 178
+    },
+
+    {
+      "type": "select",
+      "id": "logo_alignment",
+      "label": "Logo Alignment",
+
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+
+      ]
+    },
+  ],
+
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}
