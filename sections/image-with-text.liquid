@@ -6,6 +6,8 @@
   align-items: var(--align-items);
   justify-content: var(--justify-content);
   gap: var(--gap);
+  margin-inline: 0;
+  margin-block: var(--section-margin-block);
 }
 
 .section-{{ section.id }} .image {
@@ -17,7 +19,7 @@
 
 .section-{{ section.id }} .image img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   object-fit: var(--image-fit);
   border-radius: var(--image-radius);
@@ -71,19 +73,35 @@
     width: {{ block.settings.button_width }}px;
     display: inline-block;
     text-align: {{ block.settings.button_text_align }};
+    transition: all 0.3s ease-in;
   }
 
-    .button-container-{{ block.id }} {
-      display: flex;
-      justify-content: {% if block.settings.button_alignment == 'center' %}center
-      {% elsif block.settings.button_alignment == 'left' %}flex-start
-      {% else %}flex-end{% endif %};
+
+  {% if block.settings.ishover == true %}
+
+    .button-{{ block.id }}:hover {
+      background: {{ block.settings.button_hover_bg }};
+      color: {{ block.settings.button_hover_text_color }};
     }
+
+  {% endif %}
+
+  .button-container-{{ block.id }} {
+    display: flex;
+    justify-content: {% if block.settings.button_alignment == 'center' %}center
+    {% elsif block.settings.button_alignment == 'left' %}flex-start
+    {% else %}flex-end{% endif %};
+  }
+
   {% endif %}
 {% endfor %}
 
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
+    .section-{{ section.id }} {
+      margin-block: var(--section-mb-mobile);
+    }
+
   .section-{{ section.id }} .container {
     flex-direction: var(--flex-direction-mobile);
   }
@@ -106,6 +124,13 @@
         font-size: clamp(12px, 3.5vw, {{ block.settings.description_font_size_mobile }}px);
       }
     {% endif %}
+
+    {% if block.type =='button' %}
+      .button-{{ block.id }} {
+        padding: clamp(10px, {{ block.settings.button_padding_block }}px, 40px);
+        font-size: clamp(10px, 4vw, {{ block.settings.button_font_size }}px);
+      }
+      {% endif %}
   {% endfor %}
 }
 </style>
@@ -117,11 +142,13 @@
       --align-items: {{ section.settings.align_items }};
       --justify-content: {{ section.settings.justify_content }};
       --gap: {{ section.settings.gap }}px;
+      --section-margin-block: {{ section.settings.section_margin_block }}px;
       --image-width: {{ section.settings.image_width }}px;
       --image-radius: {{ section.settings.image_border_radius }}px;
       --image-fit: {{ section.settings.image_object_fit }};
       --image-mbl-width: {{ section.settings.image_width_mbl }}%;
       --content-width: {{ section.settings.text_content_width }}px;
+      --section-mb-mobile: {{ section.settings.section_margin_block_mobile }}px;
     ">
   <div class="container">
 
@@ -255,6 +282,28 @@
     },
 
     {
+      "type": "range",
+      "id": "section_margin_block",
+      "label": "Section Margin Block",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+
+    {
+      "type": "range",
+      "id": "section_margin_block_mobile",
+      "label": "Section Margin Block Mobile",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+
+    {
       "type": "select",
       "id": "flex_direction",
       "label": "Flex Direction",
@@ -276,8 +325,10 @@
       "options": [
         { "value": "center", "label": "Center" },
         { "value": "start", "label": "Start" },
-        { "value": "end", "label": "End" }
+        { "value": "end", "label": "End" },
+        {"value": "stretch", "label": "stretch"}
       ],
+
       "default": "center"
     },
 
@@ -503,7 +554,11 @@
 
         { "type": "color", "id": "button_font_color", "label": "Font Color", "default": "#fff" },
 
-        { "type": "number", "id": "button_border_radius", "label": "Border Radius", "default": 10 }
+        { "type": "number", "id": "button_border_radius", "label": "Border Radius", "default": 10 },
+
+        {"type": "color", "id": "button_hover_bg", "label": "Button Hover", "default": "#fff"},
+        {"type": "color", "id": "button_hover_text_color", "label": "Button Hover", "default": "#fff"},
+        {"type": "checkbox", "id": "ishover", "label": "Enable hover", "default": true},
       ]
     }
   ],
